@@ -1,0 +1,27 @@
+# Guardrails — xavfsizlik cheklovlari
+limits:
+  max_input_chars: 4000
+  max_output_tokens: 1024
+  request_timeout_s: 600
+  max_concurrent_requests: 2
+
+routing:
+  min_confidence: 0.5        # undan past bo'lsa LoRA fallback
+  fallback_route: chat       # ikkalasi ishonchsiz bo'lsa
+  blocked_classes: []        # kelajakda
+
+content:
+  # Hozircha filtrlash yo'q — lokal akademik tadqiqot
+  profanity_filter: false
+  pii_detection: false
+
+resources:
+  max_vram_mb: 3900          # OOM oldini olish
+  max_ram_mb: 14000
+  specialist_swap_timeout_s: 120
+  health_check_interval_s: 2
+
+logging:
+  request_log: "logs/inference/requests.jsonl"
+  error_log: "logs/errors/errors.jsonl"
+  keep_days: 30

@@ -1,0 +1,25 @@
+# .gitignore — SLM Orkestrator
+.venv
+.venv/
+__pycache__/
+*.pyc
+
+# Modellar (katta fayllar)
+models/**/*.gguf
+models/qwen2.5-0.5b-instruct/
+models/router/checkpoints/
+
+# Loglar
+logs/inference/*.log
+logs/training/*.log
+logs/errors/*.log
+
+# Natija JSONlari (loglar alohida saqlanadi, lekin git'da kerak emas)
+logs/inference/*.json
+
+# Test artefaktlari
+tests/fixtures/*.png
+
+# Boshqa
+.pytest_cache/
+*.egg-info/

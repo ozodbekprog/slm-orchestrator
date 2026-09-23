@@ -1,0 +1,46 @@
+# SLM Orkestrator konfiguratsiyasi
+router:
+  semantic:
+    encoder: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    device: cpu
+    threshold: 0.5
+  lora:
+    base: "models/qwen2.5-0.5b-instruct"
+    adapter: "models/router/lora_adapter"
+    device: cpu
+    num_labels: 5
+    max_len: 64
+
+orchestrator:
+  host: "127.0.0.1"
+  port: 8200
+  lru: 1                    # bir vaqtda 1 mutaxassis (4GB VRAM)
+  warmup: true
+
+specialists:
+  math:  {port: 8101, model: "models/math/math.gguf",  ngl: 99,  extra: []}
+  code:  {port: 8102, model: "models/code/code.gguf",  ngl: 99,  extra: []}
+  chat:  {port: 8103, model: "models/chat/chat.gguf",  ngl: 99,  extra: []}
+  image: {port: 8104, model: "models/image/image.gguf", ngl: 99,
+          extra: ["--mmproj", "models/image/mmproj.gguf"]}
+  uz:    {port: 8105, model: "models/uz/uz.gguf", ngl: 20,
+          extra: ["-ot", "token_embd.weight=CPU,output.weight=CPU"]}
+
+llama:
+  binary: "../uz-llm-lab/tools/llama-vulkan/bin/llama-server"
+  context: 4096
+  threads: 8
+  flash_attn: auto
+  kv_type: q8_0
+  parallel: 1
+
+training:
+  dataset: "data/router_train.jsonl"
+  eval: "data/router_eval.jsonl"
+  batch: 2
+  grad_accum: 16
+  lr: 0.0002
+  epochs: 3
+  lora_r: 16
+  lora_alpha: 32
+  dtype: fp32            # fp16 bu GPU'da 5x sekin (o'lchangan)
